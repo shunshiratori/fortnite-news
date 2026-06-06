@@ -1,0 +1,42 @@
+name: Fortnite News Notifier
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    - cron: '*/30 * * * *'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Run
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          mvn -q compile
+          mvn -q exec:java -Dexec.mainClass=Main
+
+      - name: Commit state
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+          git add last-news.txt
+
+          git diff --cached --quiet || \
+          git commit -m "update last news"
+
+          git push
