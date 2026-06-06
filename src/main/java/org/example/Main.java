@@ -14,7 +14,7 @@ import java.nio.file.Path;
 public class Main {
 
     private static final String NEWS_URL =
-            "https://fortnite-api.com/v2/news";
+            "https://fortnite-api.com/v2/news?language=ja";
 
     private static final String LAST_NEWS_FILE =
             "last-news.txt";
