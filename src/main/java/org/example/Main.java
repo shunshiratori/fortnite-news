@@ -35,11 +35,14 @@ public class Main {
 
         JsonNode root = mapper.readTree(response.body());
 
-        JsonNode news =
-                root.path("data")
-                        .path("br")
-                        .path("motds")
-                        .get(0);
+        JsonNode motds = root.path("data").path("br").path("motds");
+
+        if (motds.isMissingNode() || !motds.isArray() || motds.isEmpty()) {
+            System.out.println("ニュースデータが取得できませんでした");
+            return;
+        }
+
+        JsonNode news = motds.get(0);
 
         String title = news.path("title").asText();
         String body = news.path("body").asText();

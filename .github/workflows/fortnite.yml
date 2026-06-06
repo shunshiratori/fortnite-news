@@ -27,7 +27,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           mvn -q compile
-          mvn -q exec:java -Dexec.mainClass=Main
+          mvn -q exec:java -Dexec.mainClass=org.example.Main
 
       - name: Commit state
         run: |
