@@ -41,11 +41,9 @@ public class Main {
             return;
         }
 
-        String currentVersion = extractVersion(currentBuild);
         String previousBuild = readPreviousBuild();
-        String previousVersion = extractVersion(previousBuild);
 
-        if (currentVersion.equals(previousVersion)) {
+        if (currentBuild.equals(previousBuild)) {
             System.out.println("アップデートなし: " + currentBuild);
             return;
         }
@@ -55,11 +53,6 @@ public class Main {
         Files.writeString(Path.of(LAST_BUILD_FILE), currentBuild);
 
         System.out.println("アップデート通知完了: " + currentBuild);
-    }
-
-    private static String extractVersion(String build) {
-        Matcher m = VERSION_PATTERN.matcher(build);
-        return m.find() ? m.group(1) : build;
     }
 
     private static String readPreviousBuild() throws IOException {
