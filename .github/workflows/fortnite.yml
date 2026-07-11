@@ -24,6 +24,7 @@ jobs:
 
       - name: Run
         env:
+          FORTNITE_API_KEY: ${{ secrets.FORTNITE_API_KEY }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           mvn -q compile

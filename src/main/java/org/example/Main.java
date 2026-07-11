@@ -22,18 +22,34 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
+        String apiKey = System.getenv("FORTNITE_API_KEY");
+        if (apiKey == null || apiKey.isBlank()) {
+            throw new RuntimeException("FORTNITE_API_KEY が設定されていません");
+        }
+
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(AES_URL))
+                .header("Authorization", apiKey)
+                .header("Accept", "application/json")
+                .header("User-Agent", "fornite-news/1.0")
                 .GET()
                 .build();
 
         HttpResponse<String> response =
                 client.send(request, HttpResponse.BodyHandlers.ofString());
 
+        String body = response.body();
+        if (response.statusCode() != 200 || body.isBlank() || body.charAt(0) != '{') {
+            throw new RuntimeException(
+                    "Fortnite API から JSON を取得できませんでした (HTTP "
+                            + response.statusCode() + ")"
+            );
+        }
+
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode root = mapper.readTree(response.body());
+        JsonNode root = mapper.readTree(body);
         String currentBuild = root.path("data").path("build").asText();
 
         if (currentBuild.isBlank()) {
