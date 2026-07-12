@@ -16,22 +16,18 @@ import java.util.regex.Pattern;
 public class Main {
 
     private static final String AES_URL = "https://fortnite-api.com/v2/aes";
+    private static final String API_CLIENT_ID = "fornite-news";
     private static final String LAST_BUILD_FILE = "last-news.txt";
     private static final Pattern VERSION_PATTERN =
             Pattern.compile("Release-([\\d.]+)-CL-(\\d+)");
 
     public static void main(String[] args) throws Exception {
 
-        String apiKey = System.getenv("FORTNITE_API_KEY");
-        if (apiKey == null || apiKey.isBlank()) {
-            throw new RuntimeException("FORTNITE_API_KEY が設定されていません");
-        }
-
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(AES_URL))
-                .header("Authorization", apiKey)
+                .header("Authorization", API_CLIENT_ID)
                 .header("Accept", "application/json")
                 .header("User-Agent", "fornite-news/1.0")
                 .GET()
